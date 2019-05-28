@@ -15,5 +15,17 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 RUN curl -L https://phar.phpunit.de/phpunit-8.phar > /usr/local/bin/phpunit \
     && chmod +x /usr/local/bin/phpunit
 
+# Enable Remote IP
+RUN a2enmod remoteip
+
+# Enable Rewrite
+RUN a2enmod rewrite
+
+# Add logs with good ip
+COPY remoteip.conf /etc/apache2/conf-enabled
+
+# Add default Apache conf
+COPY 000-default.conf /etc/apache2/sites-enabled/000-default.conf
+
 # Activate php log
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
